@@ -20,8 +20,8 @@ public class Zad1 {
 
         for (int o = 0; o < 3; o++) {
             double[] kA = {0.5, 10, 40};
-            double[] kP = {-20, 5.0 * Math.PI, -10.0 * Math.PI};
-            double[] kF = {-20, 5.0 * Math.PI, -10.0 * Math.PI};
+            double[] kP = {-4.0 * Math.PI, 5.0 * Math.PI, 4.0 * Math.PI};
+            double[] kF = {-4.0 * Math.PI, 5.0 * Math.PI, 4.0 * Math.PI};
             char[] c = {'a', 'b', 'c'};
 
             double[] m = new double[N];
@@ -82,9 +82,9 @@ public class Zad1 {
                 zFMSeries.add(fr, zFcidB > prog ? zFcidB : prog);
             }
 
-            Chart.saveChart(zAMSeries, "Czas [s]", "Amplituda [dB]", "src/Lab4/plots/" + c[o] +"-MzAt.png" ,true);
-            Chart.saveChart(zPMSeries, "Czas [s]", "Amplituda [dB]", "src/Lab4/plots/" + c[o] +"-MzPt.png",  true);
-            Chart.saveChart(zFMSeries, "Czas [s]", "Amplituda [dB]", "src/Lab4/plots/" + c[o] +"-MzFt.png", true);
+            Chart.saveChart(zAMSeries, "Częstotliwość [Hz]", "Amplituda [dB]", "src/Lab4/plots/" + c[o] +"-MzAt.png" );
+            Chart.saveChart(zPMSeries, "Częstotliwość [Hz]", "Amplituda [dB]", "src/Lab4/plots/" + c[o] +"-MzPt.png");
+            Chart.saveChart(zFMSeries, "Częstotliwość [Hz]", "Amplituda [dB]", "src/Lab4/plots/" + c[o] +"-MzFt.png");
         }
 
     }
