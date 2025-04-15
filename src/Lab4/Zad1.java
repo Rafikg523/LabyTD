@@ -23,7 +23,6 @@ public class Zad1 {
             double[] kP = {-20, 5.0 * Math.PI, -10.0 * Math.PI};
             double[] kF = {-20, 5.0 * Math.PI, -10.0 * Math.PI};
             char[] c = {'a', 'b', 'c'};
-            double[] pasmo = {3.0, 6.0, 10.0};
 
             double[] m = new double[N];
             double[] zA = new double[N];
@@ -48,6 +47,12 @@ public class Zad1 {
                 zPSeries.add(t, zP[i]);
                 zFSeries.add(t, zF[i]);
             }
+
+
+            //Chart.saveChart(mSeries, "Czas [s]", "Amplituda", "src/Lab4/plots/mt.png");
+            Chart.saveChart(zASeries, mSeries, "Czas [s]", "Amplituda", "src/Lab4/plots/" + c[o] +"-zAt.png");
+            Chart.saveChart(zPSeries, mSeries, "Czas [s]", "Amplituda", "src/Lab4/plots/" + c[o] +"-zPt.png");
+            Chart.saveChart(zFSeries, mSeries, "Czas [s]", "Amplituda", "src/Lab4/plots/" + c[o] +"-zFt.png");
 
             XYSeries zAMSeries = new XYSeries("zAM(t)");
             XYSeries zPMSeries = new XYSeries("zPAM(t)");
@@ -75,25 +80,6 @@ public class Zad1 {
                 zAMSeries.add(fr, zAcidB > prog ? zAcidB : prog);
                 zPMSeries.add(fr, zPcidB > prog ? zPcidB : prog);
                 zFMSeries.add(fr, zFcidB > prog ? zFcidB : prog);
-            }
-
-            double maxAM = zAMSeries.getMaxY();
-            double maxPM = zPMSeries.getMaxY();
-            double maxFM = zFMSeries.getMaxY();
-
-            double progAM = maxAM - pasmo[o];
-            double progPM = maxPM - pasmo[o];
-            double progFM = maxFM - pasmo[o];
-
-            double AMmin, PMmin, FMmin;
-            double AMmax, PMmax, FMmax;
-
-            for (int i = 0; i < N; i++) {
-                double AMY = zAMSeries.getY(i).doubleValue();
-                double PMY = zPMSeries.getY(i).doubleValue();
-                double FMY = zFMSeries.getY(i).doubleValue();
-
-
             }
 
             Chart.saveChart(zAMSeries, "Czas [s]", "Amplituda [dB]", "src/Lab4/plots/" + c[o] +"-MzAt.png" ,true);
