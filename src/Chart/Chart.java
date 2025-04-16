@@ -205,4 +205,86 @@ public class Chart {
         }
     }
 
+    public static void saveChart2(XYSeries series, String title, String Xname, String Yname, String filename, double fa, double fb, String[] dane) {
+        XYSeriesCollection dataset = new XYSeriesCollection();
+        dataset.addSeries(series);
+
+        NumberAxis xAxis = new NumberAxis(Xname);
+        xAxis.setAutoRange(true);
+        NumberAxis yAxis = new NumberAxis(Yname);
+
+        XYSeriesCollection extraLines = new XYSeriesCollection();
+
+        double yTop = series.getMaxY();
+        double end = series.getMaxX();
+
+        XYSeries lineTop = new XYSeries("lineTop");
+        lineTop.add(fa, yTop);
+        lineTop.add(fb, yTop);
+        extraLines.addSeries(lineTop);
+
+        XYSeries lineFa = new XYSeries("lineFa");
+        lineFa.add(fa, 0);
+        lineFa.add(fa, yTop);
+        extraLines.addSeries(lineFa);
+
+        XYSeries lineFb = new XYSeries("lineFb");
+        lineFb.add(fb, 0);
+        lineFb.add(fb, yTop);
+        extraLines.addSeries(lineFb);
+
+        XYSplineRenderer renderer = new XYSplineRenderer();
+        renderer.setSeriesShapesVisible(0, false);
+
+        XYPlot plot = new XYPlot(dataset, xAxis, yAxis, renderer);
+
+        XYLineAndShapeRenderer extraRenderer = new XYLineAndShapeRenderer(true, false);
+        Stroke dashed = new BasicStroke(2.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{5}, 0);
+
+        extraRenderer.setSeriesPaint(0, Color.BLUE);
+        extraRenderer.setSeriesStroke(0, dashed);
+
+        extraRenderer.setSeriesPaint(1, Color.BLUE);
+        extraRenderer.setSeriesStroke(1, dashed);
+
+        extraRenderer.setSeriesPaint(2, Color.BLUE);
+        extraRenderer.setSeriesStroke(2, dashed);
+
+        plot.setDataset(1, extraLines);
+        plot.setRenderer(1, extraRenderer);
+        plot.setDatasetRenderingOrder(DatasetRenderingOrder.REVERSE);
+
+        LegendItemCollection legendItems = new LegendItemCollection();
+        Color[] colors = new Color[]{Color.BLACK, Color.RED, Color.BLUE};
+        for (int i = 0; i < dane.length && i < colors.length; i++) {
+            LegendItem item = new LegendItem(dane[i], null, null, null, new Rectangle(10, 10), colors[i]);
+            legendItems.add(item);
+        }
+        plot.setFixedLegendItems(legendItems);
+
+        JFreeChart chart = new JFreeChart(title, JFreeChart.DEFAULT_TITLE_FONT, plot, false);
+        LegendTitle legend = new LegendTitle(plot);
+        legend.setPosition(RectangleEdge.RIGHT);
+        legend.setHorizontalAlignment(HorizontalAlignment.RIGHT);
+        legend.setVerticalAlignment(VerticalAlignment.TOP);
+        legend.setBackgroundPaint(new Color(255, 255, 255, 200));
+        legend.setFrame(new BlockBorder(Color.BLACK));
+        legend.setItemFont(new Font("SansSerif", Font.PLAIN, 12));
+        legend.setMargin(5, 5, 5, 5);
+        legend.setPadding(5, 5, 5, 5);
+        legend.setLegendItemGraphicPadding(new RectangleInsets(2, 2, 2, 2));
+        legend.setItemLabelPadding(new RectangleInsets(2, 2, 2, 2));
+
+        chart.addSubtitle(legend);
+
+        try {
+            File file = new File(filename);
+            ChartUtilities.saveChartAsPNG(file, chart, 800, 600);
+            System.out.println("Zapisano wykres: " + filename);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }

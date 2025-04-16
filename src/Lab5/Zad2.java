@@ -11,7 +11,7 @@ import org.jfree.data.xy.XYSeries;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Zad1 {
+public class Zad2 {
     public static void main(String[] args) {
         int fs = 1024;
         int T = 1;
@@ -84,26 +84,36 @@ public class Zad1 {
                     MSeries.add(fr, Math.max(dB, prog));
                 }
 
-                double top = MSeries.getMaxY();
-                double[] min = new double[B.length];
-                double[] max = new double[B.length];
-                for (int i = 0; i < B.length; i++) {
-                    double bottom = top - B[i];
-                    boolean isMin = false;
-                    series:
-                    for (int j = 0; j < MSeries.getItemCount(); j++) {
-                        double v = MSeries.getY(j).doubleValue();
-                        if (!isMin && v >= bottom) {
-                            min[i] = MSeries.getX(j).doubleValue();
-                            isMin = true;
-                        }
-                        if (v >= bottom) {
-                            max[i] = MSeries.getX(j).doubleValue();
-                        }
-                    }
-                    Bwidth[i] = max[i] - min[i];
+                double E = 0;
+                for (int i = 0; i < MSeries.getItemCount(); i++) {
+                    E += Math.pow(MSeries.getY(i).doubleValue(), 2.0);
                 }
-                Chart.saveChart(MSeries,c + "-M" + Z[o] , "Częstotliwość [Hz]", "Amplituda [dB]", "src/Lab5/plots/" + c + "-M" + Z[o] + ".png", B, Bwidth, min, max);
+                double ra = 0;
+                double alpha = 0;
+                double fa = 0;
+                double fb = 0;
+                while (ra <= 80) {
+                    alpha += 1.0;
+                    fa = fn - alpha;
+                    fb = fn + alpha;
+                    int faId = MSeries.indexOf(fa);
+                    int fbId = MSeries.indexOf(fb);
+                    double Ea = 0;
+                    for (int i = faId; i < fbId; i++) {
+                        Ea += Math.pow(MSeries.getY(i).doubleValue(), 2.0);
+                    }
+
+                    ra = Ea/E * 100;
+                }
+
+                double Ba = fb - fa;
+
+                String[] dane = new String[3];
+                dane[0] = "alpha = " + alpha;
+                dane[1] = "r = " + ra;
+                dane[2] = "Ba = " + Ba;
+
+                Chart.saveChart2(MSeries, c + "-M" + Z[o], "Częstotliwość [Hz]", "Amplituda [dB]", "src/Lab5/plots/" + c + "-M" + Z[o] + ".png", fa, fb, dane);
             }
         }
     }
