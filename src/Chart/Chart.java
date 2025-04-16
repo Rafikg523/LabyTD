@@ -255,9 +255,9 @@ public class Chart {
         plot.setDatasetRenderingOrder(DatasetRenderingOrder.REVERSE);
 
         LegendItemCollection legendItems = new LegendItemCollection();
-        Color[] colors = new Color[]{Color.BLACK, Color.RED, Color.BLUE};
-        for (int i = 0; i < dane.length && i < colors.length; i++) {
-            LegendItem item = new LegendItem(dane[i], null, null, null, new Rectangle(10, 10), colors[i]);
+        Color[] colors = new Color[]{Color.BLUE, Color.RED, Color.BLUE};
+        for (int i = 0; i < dane.length; i++) {
+            LegendItem item = new LegendItem(dane[i], null, null, null, new Rectangle(10, 10), colors[0]);
             legendItems.add(item);
         }
         plot.setFixedLegendItems(legendItems);

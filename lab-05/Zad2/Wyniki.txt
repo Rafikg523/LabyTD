@@ -1,0 +1,74 @@
+Widmo A - Sygnał zmodulowany amplitudowo
+========================================
+
+a)
+alpha = 6
+r = 100%
+Ba = 12 Hz
+K
+
+b)
+alpha = 6
+r = 100%
+Ba = 12 Hz
+
+c)
+alpha = 6
+r = 100%
+Ba = 12 Hz
+
+Obserwacje:
+Szerokość pasma jest najmniejsza spośród reszty typów modulacji
+Szerokość pasma się nie zmienia
+
+
+Widmo P - Sygnał zmodulowany kątowo
+===================================
+
+a)
+alpha = 51
+r = 83%
+Ba = 102 Hz
+
+b)
+alpha = 76
+r = 82%
+Ba = 152 Hz
+
+c)
+alpha = 76
+r = 82%
+Ba = 152 Hz
+
+Obserwacje:
+Im większa alpha tym większe pasmo
+Wraz ze zmienną K zwiększa się szerokość pasma i alpha
+
+
+Widmo F - Sygnał zmodulowany częstotliwościowo
+==============================================
+
+a)
+alpha = 41
+r = 83%
+Ba = 82 Hz
+
+b)
+alpha = 16
+r = 82%
+Ba = 32 Hz
+
+c)
+alpha = 16
+r = 82%
+Ba = 32 Hz
+
+Obserwacje:
+Im większe K tym mniejsza szerokość pasma i mniejsza alpha
+
+
+Wnioski
+==============================================
+Alpha zmienia się wraz z szerokością pasma
+Zmienna K ma silny wpływ na zmiane szerokości pasma
+K w różnych typach modulacji inaczej oddziałuje na szerokość pasma
