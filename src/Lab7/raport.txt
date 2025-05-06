@@ -1,0 +1,48 @@
+Część 1
+
+Widmo ASK
+
+B10 = 1.3 Hz
+B6 = 0.1 Hz
+B3 = 0.1 Hz
+
+
+Widmo FSK
+
+B10 = 3.8 Hz
+B6 = 2.4 Hz
+B3 = 1.7 Hz
+
+
+Widmo PSK
+
+B10 = 8.7 Hz
+B6 = 2.5 Hz
+B3 = 1.9 Hz
+
+
+Część 2
+
+Widmo ASK
+
+alpha = 618
+r = 80.062 %
+Ba = 61.8 Hzs
+
+
+Widmo FSK
+
+alpha = 520
+r = 80.058 %
+Ba =  52 Hz
+
+
+Widmo PSK
+
+alpha = 644
+r = 80.007 %
+Ba = 64.4 Hz
+
+
+
+

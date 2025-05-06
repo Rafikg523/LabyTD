@@ -40,32 +40,46 @@ public class Chart {
         saveChart(series, Xname, Yname, filename, a, b, true);
     }
 
-    public static void saveChart(XYSeries series, String Xname, String Yname, String filename, double a, double b, boolean norm) {
-        XYSeriesCollection dataset = new XYSeriesCollection();
+    public static void saveChart(
+            XYSeries series,
+            String Xname,
+            String Yname,
+            String filename,
+            double a,
+            double b,
+            boolean norm) {
+
+        int precision = Math.max(1, Math.min(50, 800 / series.getItemCount()));
 
         if (norm) {
-            XYSeries Nseries = new XYSeries(series.getKey());
+            XYSeries nSeries = new XYSeries(series.getKey());
+            double minY = series.getMinY();
+            double maxY = series.getMaxY();
             for (int i = 0; i < series.getItemCount(); i++) {
-                double y = (series.getY(i).doubleValue() - series.getMinY())/(series.getMaxY() - series.getMinY());
-                Nseries.add(series.getX(i), y);
+                double y = (series.getY(i).doubleValue() - minY) / (maxY - minY);
+                nSeries.add(series.getX(i), y);
             }
-            series = Nseries;
+            series = nSeries;
         }
 
+        XYSeriesCollection dataset = new XYSeriesCollection();
         dataset.addSeries(series);
 
         NumberAxis xAxis = new NumberAxis(Xname);
         xAxis.setAutoRange(false);
-        a *= 1.1;
-        b *= 1.1;
-        xAxis.setRange(a, b);
+        xAxis.setRange(a * 1.1, b * 1.1);
+
         NumberAxis yAxis = new NumberAxis(Yname);
 
-        XYSplineRenderer renderer = new XYSplineRenderer();
+        XYSplineRenderer renderer = new XYSplineRenderer(precision);
         renderer.setSeriesShapesVisible(0, false);
 
         XYPlot plot = new XYPlot(dataset, xAxis, yAxis, renderer);
-        JFreeChart chart = new JFreeChart(series.getDescription(), JFreeChart.DEFAULT_TITLE_FONT, plot, false);
+        JFreeChart chart = new JFreeChart(
+                series.getDescription(),
+                JFreeChart.DEFAULT_TITLE_FONT,
+                plot,
+                false);
 
         try {
             File file = new File(filename);
@@ -75,6 +89,8 @@ public class Chart {
             e.printStackTrace();
         }
     }
+
+
 
     public static void saveChart(XYSeries series1, XYSeries series2, String Xname, String Yname, String filename) {
         XYSeriesCollection dataset = new XYSeriesCollection();
@@ -106,43 +122,85 @@ public class Chart {
         XYSeriesCollection dataset = new XYSeriesCollection();
         dataset.addSeries(series);
 
+        double minmin = min[0];
+        for (int i = 0; i < min.length; i++) {
+            minmin = Math.min(minmin, min[i]);
+        }
+
+        double maxmax = max[0];
+        for (int i = 0; i < max.length; i++) {
+            maxmax = Math.max(maxmax, max[i]);
+        }
+
+        double center = (maxmax + minmin) / 2.0;
+        double side1 = Math.abs(maxmax - center);
+        double side2 = Math.abs(center - minmin);
+        double side = Math.max(side1, side2);
+
+        side *= 1.5;
+
+        maxmax = center + side;
+        minmin = center - side;
+
+        maxmax = maxmax <= series.getMaxX() ? maxmax : series.getMaxX();
+        minmin = minmin >= series.getMinX() ? minmin : series.getMinX();
+
         NumberAxis xAxis = new NumberAxis(Xname);
-        xAxis.setAutoRange(true);
+
+        xAxis.setAutoRange(false);
+        xAxis.setRange(minmin , maxmax);
+
         NumberAxis yAxis = new NumberAxis(Yname);
+        yAxis.setAutoRange(true);
 
         XYSeriesCollection extraLines = new XYSeriesCollection();
 
         double yTop = series.getMaxY();
         double end = series.getMaxX();
         XYSeries lineTop = new XYSeries("lineTop");
-        lineTop.add(0, yTop);
+        lineTop.add(series.getMinX(), yTop);
         lineTop.add(end, yTop);
         extraLines.addSeries(lineTop);
 
         if (B != null && min != null && max != null && B.length == min.length && B.length == max.length && Bwidth != null && B.length == Bwidth.length) {
+            double epsilon = (maxmax - minmin) / 500.0;
+
+            Map<Double, Integer> minDup = new HashMap<>();
+            Map<Double, Integer> maxDup = new HashMap<>();
+
             for (int i = 0; i < B.length; i++) {
+                double xMin = min[i];
+                double xMax = max[i];
+
+                int minIdx = minDup.merge(xMin, 1, Integer::sum) - 1;
+                int maxIdx = maxDup.merge(xMax, 1, Integer::sum) - 1;
+
+                double xMinShifted = xMin + minIdx * epsilon;
+                double xMaxShifted = xMax + maxIdx * epsilon;
+
                 double yBottom = yTop - B[i];
 
                 XYSeries lineBottom = new XYSeries("lineBottom_" + i);
-                lineBottom.add(0, yBottom);
+                lineBottom.add(series.getMinX(), yBottom);
                 lineBottom.add(end, yBottom);
 
                 XYSeries lineMin = new XYSeries("lineMin_" + i);
-                lineMin.add(min[i], 0);
-                lineMin.add(min[i], yTop);
+                lineMin.add(xMinShifted, series.getMinY());
+                lineMin.add(xMinShifted, yBottom);
 
                 XYSeries lineMax = new XYSeries("lineMax_" + i);
-                lineMax.add(max[i], 0);
-                lineMax.add(max[i], yTop);
+                lineMax.add(xMaxShifted, series.getMinY());
+                lineMax.add(xMaxShifted, yBottom);
 
                 extraLines.addSeries(lineBottom);
                 extraLines.addSeries(lineMin);
                 extraLines.addSeries(lineMax);
             }
+
         }
 
-        XYSplineRenderer renderer = new XYSplineRenderer();
-        renderer.setSeriesShapesVisible(0, false);
+        XYSplineRenderer renderer = new XYSplineRenderer(40);
+        renderer.setSeriesShapesVisible(0, true);
 
         XYPlot plot = new XYPlot(dataset, xAxis, yAxis, renderer);
 
@@ -174,7 +232,7 @@ public class Chart {
             LegendItemCollection legendItems = new LegendItemCollection();
             for (int i = 0; i < B.length; i++) {
                 Color color = colors[i % colors.length];
-                String label = "B" + B[i] + " = " + Bwidth[i];
+                String label = "B" + B[i] + " = " + Bwidth[i] + " Hz";
                 LegendItem item = new LegendItem(label, null, null, null, new Rectangle(10, 10), color);
                 legendItems.add(item);
             }
@@ -198,14 +256,14 @@ public class Chart {
 
         try {
             File file = new File(filename);
-            ChartUtilities.saveChartAsPNG(file, chart, 800, 600);
+            ChartUtilities.saveChartAsPNG(file, chart, 1600, 600);
             System.out.println("Zapisano wykres: " + filename);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public static void saveChart2(XYSeries series, String title, String Xname, String Yname, String filename, double fa, double fb, String[] dane) {
+    public static void saveChart2(XYSeries series, String title, String Xname, String Yname, String filename, int faId, int fbId, String[] dane) {
         XYSeriesCollection dataset = new XYSeriesCollection();
         dataset.addSeries(series);
 
@@ -217,6 +275,9 @@ public class Chart {
 
         double yTop = series.getMaxY();
         double end = series.getMaxX();
+
+        double fa = series.getX(faId).doubleValue();
+        double fb = series.getX(fbId).doubleValue();
 
         XYSeries lineTop = new XYSeries("lineTop");
         lineTop.add(fa, yTop);
@@ -279,7 +340,7 @@ public class Chart {
 
         try {
             File file = new File(filename);
-            ChartUtilities.saveChartAsPNG(file, chart, 800, 600);
+            ChartUtilities.saveChartAsPNG(file, chart, 2000, 600);
             System.out.println("Zapisano wykres: " + filename);
         } catch (IOException e) {
             e.printStackTrace();

@@ -89,31 +89,33 @@ public class Zad2 {
                     E += Math.pow(MSeries.getY(i).doubleValue(), 2.0);
                 }
                 double ra = 0;
-                double alpha = 0;
+                int alpha = 0;
                 double fa = 0;
                 double fb = 0;
+                int fnId = MSeries.indexOf(fn);
+                int faId = fnId;
+                int fbId = fnId;
                 while (ra <= 80) {
-                    alpha += 1.0;
-                    fa = fn - alpha;
-                    fb = fn + alpha;
-                    int faId = MSeries.indexOf(fa);
-                    int fbId = MSeries.indexOf(fb);
+                    alpha += 1;
+
+                    faId = faId > MSeries.getMinX() ? faId - alpha : faId;
+                    fbId = fbId < MSeries.getMaxX() ? fbId + alpha : fbId;
                     double Ea = 0;
-                    for (int i = faId; i < fbId; i++) {
+                    for (int i = faId; i <= fbId; i++) {
                         Ea += Math.pow(MSeries.getY(i).doubleValue(), 2.0);
                     }
 
                     ra = Ea/E * 100;
                 }
 
-                double Ba = fb - fa;
+                double Ba = MSeries.getX(fbId).doubleValue() - MSeries.getX(faId).doubleValue();
 
                 String[] dane = new String[3];
-                dane[0] = "alpha = " + alpha;
+                dane[0] = "alpha = " + 2*alpha;
                 dane[1] = "r = " + ra;
                 dane[2] = "Ba = " + Ba;
 
-                Chart.saveChart2(MSeries, c + "-M" + Z[o], "Częstotliwość [Hz]", "Amplituda [dB]", "src/Lab5/plots/" + c + "-M" + Z[o] + ".png", fa, fb, dane);
+                Chart.saveChart2(MSeries, c + "-M" + Z[o], "Częstotliwość [Hz]", "Amplituda [dB]", "src/Lab5/plots/" + c + "-M" + Z[o] + ".png", faId, fbId, dane);
             }
         }
     }
