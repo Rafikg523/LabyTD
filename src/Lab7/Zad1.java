@@ -92,9 +92,9 @@ public class Zad1 {
                 double am = Math.sqrt(Math.pow(Re, 2) + Math.pow(Im, 2));
                 double dB = 10.0 * Math.log10(am);
 
-                double prog = 0;
+                double prog = 0.0;
 
-                MSeries.add(fr, Math.max(prog, dB));
+                MSeries.add(fr, dB > prog ? dB : prog);
             }
             //Chart.saveChart(MSeries, "Częstotliwość [Hz]", "Amplituda", "src/Lab6/plots/M" + z + ".png", true);
 
@@ -148,7 +148,7 @@ public class Zad1 {
             double Ba = MSeries.getX(fbId).doubleValue() - MSeries.getX(faId).doubleValue();
 
             String[] dane = new String[3];
-            dane[0] = "alpha = " + (fbId - faId);
+            dane[0] = "alpha = " + (MSeries.getX(fbId).doubleValue() - MSeries.getX(faId).doubleValue());
             dane[1] = "r = " + ra;
             dane[2] = "Ba = " + Ba;
 

@@ -3,6 +3,7 @@ package Chart;
 import org.jfree.chart.*;
 import org.jfree.chart.axis.LogAxis;
 import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.axis.NumberTickUnit;
 import org.jfree.chart.block.BlockBorder;
 import org.jfree.chart.block.BlockContainer;
 import org.jfree.chart.block.ColumnArrangement;
@@ -83,13 +84,103 @@ public class Chart {
 
         try {
             File file = new File(filename);
-            ChartUtilities.saveChartAsPNG(file, chart, 800, 600);
+            ChartUtilities.saveChartAsPNG(file, chart, 1600, 600);
             System.out.println("Zapisano wykres: " + filename);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    public static void saveChart3(
+            XYSeries series,
+            String Xname,
+            String Yname,
+            String filename) {
+
+        XYSeriesCollection dataset = new XYSeriesCollection();
+        dataset.addSeries(series);
+
+        NumberAxis xAxis = new NumberAxis(Xname);
+        xAxis.setAutoRangeIncludesZero(false);
+
+        NumberAxis yAxis = new NumberAxis(Yname);
+        yAxis.setAutoRangeIncludesZero(false);
+        yAxis.setRange(-0.2, 1.2);
+
+        XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
+        renderer.setSeriesLinesVisible(0, true);
+        renderer.setSeriesShapesVisible(0, false);
+        renderer.setSeriesStroke(0, new BasicStroke(4.0f));
+
+
+        XYPlot plot = new XYPlot(dataset, xAxis, yAxis, renderer);
+        JFreeChart chart = new JFreeChart(
+                series.getDescription(),
+                JFreeChart.DEFAULT_TITLE_FONT,
+                plot,
+                false);
+
+        try {
+            File file = new File(filename);
+            ChartUtilities.saveChartAsPNG(file, chart, 1600, 600);
+            System.out.println("Zapisano wykres: " + filename);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void saveChart4(
+            XYSeries series1,
+            XYSeries series2,
+            String Xname,
+            String Yname,
+            String filename,
+            String title) {
+
+        XYSeriesCollection dataset = new XYSeriesCollection();
+        dataset.addSeries(series2);
+        dataset.addSeries(series1);
+
+        NumberAxis xAxis = new NumberAxis(Xname);
+        xAxis.setAutoRangeIncludesZero(true);
+        xAxis.setTickUnit(new NumberTickUnit(1.0));
+
+        NumberAxis yAxis = new NumberAxis(Yname);
+        yAxis.setAutoRangeIncludesZero(false);
+        yAxis.setRange(-0.2, 1.2);
+        yAxis.setTickUnit(new NumberTickUnit(1));
+
+        XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
+        renderer.setSeriesLinesVisible(0, true);
+        renderer.setSeriesShapesVisible(0, false);
+        renderer.setSeriesStroke(0, new BasicStroke(
+                3.0f,
+                BasicStroke.CAP_BUTT,
+                BasicStroke.JOIN_BEVEL,
+                0,
+                new float[]{10.0f, 10.0f},
+                0.0f
+        ));
+
+        renderer.setSeriesLinesVisible(1, true);
+        renderer.setSeriesShapesVisible(1, false);
+        renderer.setSeriesStroke(1, new BasicStroke(3.0f));
+
+        XYPlot plot = new XYPlot(dataset, xAxis, yAxis, renderer);
+        JFreeChart chart = new JFreeChart(
+                title,
+                JFreeChart.DEFAULT_TITLE_FONT,
+                plot,
+                true);
+
+        try {
+            File file = new File(filename);
+            ChartUtilities.saveChartAsPNG(file, chart, 1600, 600);
+            System.out.println("Zapisano wykres: " + filename);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 
     public static void saveChart(XYSeries series1, XYSeries series2, String Xname, String Yname, String filename) {
