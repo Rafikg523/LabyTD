@@ -9,10 +9,10 @@ public class Hamming {
     int totalNumberOfBits;
     int[] redundatBitsIds;
 
-    public Hamming(int dataBitsNumber, int redundantBitsNumber) {
-        this.dataBitsNumber = dataBitsNumber;
-        this.redundantBitsNumber = redundantBitsNumber;
-        this.totalNumberOfBits = dataBitsNumber + redundantBitsNumber;
+    public Hamming(int total, int data) {
+        this.dataBitsNumber = data;
+        this.redundantBitsNumber = total - data;
+        this.totalNumberOfBits = total;
         this.redundatBitsIds = getRedundatBitsIds();
     }
 
@@ -35,37 +35,41 @@ public class Hamming {
         return parity % 2;
     }
 
-    public int[] encoder(int[] raw) {
-        int[] bits = new int[raw.length];
-        for (int i = 0; i < raw.length; i++) {
-            bits[i] = raw[raw.length - 1 - i];
-        }
-        int[] result = new int[totalNumberOfBits];
+    public int[][] encoder(int[] raw) {
+        int blockNumber = (int) Math.ceil(raw.length / dataBitsNumber);
+        int[][] result = new int[blockNumber][totalNumberOfBits];
 
-        int idBits = 0;
-        int idChecked = 0;
-        for (int i = 0; i < totalNumberOfBits; i++) {
-            if (idChecked < redundantBitsNumber && redundatBitsIds[idChecked] == i) {
-                idChecked++;
-                continue;
-            };
-            result[i] = bits[idBits++];
-        }
+        for (int i = 0; i < blockNumber; i++) {
+            int[] block = new int[dataBitsNumber];
+            for (int j = 0; j < dataBitsNumber; j++) {
+                block[j] = raw[i * dataBitsNumber + j];
+            }
+            int idBlock = 0;
+            int idChecked = 0;
+            for (int j = 0; j < totalNumberOfBits; j++) {
+                if (idChecked < redundantBitsNumber && redundatBitsIds[idChecked] == j) {
+                    idChecked++;
+                    continue;
+                };
+                result[i][j] = block[idBlock++];
+            }
 
-        for (int i = 0; i < redundantBitsNumber; i++) {
-            int parityBit = getParityBit(i, result);
-            result[redundatBitsIds[i]] = parityBit;
+            for (int j = 0; j < redundantBitsNumber; j++) {
+                int parityBit = getParityBit(j, result[i]);
+                result[i][redundatBitsIds[j]] = parityBit;
+            }
         }
-
-        int[] encoded = new int[totalNumberOfBits];
-        for (int i = 0; i < result.length; i++) {
-            encoded[i] = result[result.length - 1 - i];
-        }
-
-        return encoded;
+        return result;
     }
 
     public int[] decoder(int[] encoded){
+        int blockNumber = (int) Math.ceil(encoded.length / dataBitsNumber);
+        int[][] result = new int[blockNumber][totalNumberOfBits];
+
+        for (int i = 0; i < blockNumber; i++) {
+            int[] block = new int[dataBitsNumber];
+        }
+
         return null;
     }
 }

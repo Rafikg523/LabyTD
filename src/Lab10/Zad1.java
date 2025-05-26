@@ -8,17 +8,40 @@ import java.util.Random;
 public class Zad1 {
 
     public static void main(String[] args) {
-        int[] raw = new int[]{1, 0, 1, 1, 0, 0, 1};
+        int n = 40;
+        Random random = new Random();
+        int[] rng = new int[n];
+        for (int i = 0; i < n; i++) {
+            rng[i] = random.nextInt(2);
+        }
 
         Hamming ham = new Hamming(7,4);
 
-        int[] encoded = ham.encoder(raw);
+        int[][] encoded = ham.encoder(rng);
 
 
         for (int i = 0; i < encoded.length; i++) {
-            System.out.print(encoded[i]);
+            System.out.println(i + 1 + ". " + Arrays.toString(encoded[i]));
+
         }
         System.out.println();
+
+        int totalLength = encoded.length * encoded[0].length;
+        int[] flattened = new int[totalLength];
+        int index = 0;
+
+        for (int i = 0; i < encoded.length; i++) {
+            for (int j = 0; j < encoded[i].length; j++) {
+                flattened[index++] = encoded[i][j];
+            }
+        }
+
+        Hamming ham2 = new Hamming(7,4);
+
+        int[] decoded = ham2.decoder(flattened);
+
+        System.out.println(Arrays.toString(rng));
+        System.out.println(Arrays.toString(decoded));
 
     }
 
