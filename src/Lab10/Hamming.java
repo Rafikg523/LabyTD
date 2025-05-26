@@ -1,7 +1,6 @@
 package Lab10;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 
 public class Hamming {
     int dataBitsNumber;
@@ -35,58 +34,73 @@ public class Hamming {
         return parity % 2;
     }
 
-    public int[][] encoder(int[] raw) {
-        int blockNumber = (int) Math.ceil(raw.length / dataBitsNumber);
-        int[][] result = new int[blockNumber][totalNumberOfBits];
+    public int[] encoder(int[] raw) {
+        int blockNumber = (int) Math.ceil((double) raw.length / dataBitsNumber);
+        int[] result = new int[blockNumber * totalNumberOfBits];
 
         for (int i = 0; i < blockNumber; i++) {
             int[] block = new int[dataBitsNumber];
             for (int j = 0; j < dataBitsNumber; j++) {
-                block[j] = raw[i * dataBitsNumber + j];
+                int index = i * dataBitsNumber + j;
+                if (index < raw.length) {
+                    block[j] = raw[index];
+                } else {
+                    block[j] = 0;
+                }
             }
+
             int idBlock = 0;
             int idChecked = 0;
             for (int j = 0; j < totalNumberOfBits; j++) {
                 if (idChecked < redundantBitsNumber && redundatBitsIds[idChecked] == j) {
                     idChecked++;
                     continue;
-                };
-                result[i][j] = block[idBlock++];
+                }
+                result[i * totalNumberOfBits + j] = block[idBlock++];
             }
 
             for (int j = 0; j < redundantBitsNumber; j++) {
-                int parityBit = getParityBit(j, result[i]);
-                result[i][redundatBitsIds[j]] = parityBit;
+                int[] currentBlock = Arrays.copyOfRange(result, i * totalNumberOfBits, (i + 1) * totalNumberOfBits);
+                int parityBit = getParityBit(j, currentBlock);
+                result[i * totalNumberOfBits + redundatBitsIds[j]] = parityBit;
             }
         }
         return result;
     }
 
-    public int[][] decoder(int[] encoded) {
+
+    public int[] decoder(int[] encoded) {
         int blockNumber = (int) Math.ceil((double) encoded.length / totalNumberOfBits);
-        int[][] result = new int[blockNumber][dataBitsNumber];
+        int[] result = new int[blockNumber * dataBitsNumber];
 
         for (int i = 0; i < blockNumber; i++) {
             int[] block = new int[totalNumberOfBits];
             for (int j = 0; j < totalNumberOfBits; j++) {
-                block[j] = encoded[i * totalNumberOfBits + j];
+                int index = i * totalNumberOfBits + j;
+                if (index < encoded.length) {
+                    block[j] = encoded[index];
+                } else {
+                    block[j] = 0;
+                }
             }
 
             int controlSum = 0;
             for (int j = 0; j < redundantBitsNumber; j++) {
-                int expectedParity = getParityBit(j, block);
-                if (expectedParity != 0) {
+                int parity = getParityBit(j, block);
+                if (parity != 0) {
                     controlSum += (1 << j);
                 }
             }
 
             if (controlSum > 0) {
                 if (controlSum <= totalNumberOfBits) {
-                    System.err.println("Suma kontrolna przekracza ilosc bitów w bloku");
+                    System.err.println("Błędny bit: " + (i * totalNumberOfBits + controlSum - 1));
+                    block[controlSum - 1] ^= 1;
+
+                } else {
+                    System.err.println("Suma kontrolna przekracza liczbę bitów w bloku");
                     return null;
                 }
-                System.err.println("Bledny bit: " + (i * totalNumberOfBits + controlSum - 1));
-                block[controlSum - 1] ^= 1;
             }
 
             int idResult = 0;
@@ -98,12 +112,12 @@ public class Hamming {
                     idBlock++;
                     continue;
                 }
-
-                result[i][idResult++] = block[idBlock++];
+                result[i * dataBitsNumber + idResult++] = block[idBlock++];
             }
         }
 
         return result;
     }
+
 
 }
