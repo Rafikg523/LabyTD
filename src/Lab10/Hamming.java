@@ -62,14 +62,48 @@ public class Hamming {
         return result;
     }
 
-    public int[] decoder(int[] encoded){
-        int blockNumber = (int) Math.ceil(encoded.length / dataBitsNumber);
-        int[][] result = new int[blockNumber][totalNumberOfBits];
+    public int[][] decoder(int[] encoded) {
+        int blockNumber = (int) Math.ceil((double) encoded.length / totalNumberOfBits);
+        int[][] result = new int[blockNumber][dataBitsNumber];
 
         for (int i = 0; i < blockNumber; i++) {
-            int[] block = new int[dataBitsNumber];
+            int[] block = new int[totalNumberOfBits];
+            for (int j = 0; j < totalNumberOfBits; j++) {
+                block[j] = encoded[i * totalNumberOfBits + j];
+            }
+
+            int controlSum = 0;
+            for (int j = 0; j < redundantBitsNumber; j++) {
+                int expectedParity = getParityBit(j, block);
+                if (expectedParity != 0) {
+                    controlSum += (1 << j);
+                }
+            }
+
+            if (controlSum > 0) {
+                if (controlSum <= totalNumberOfBits) {
+                    System.err.println("Suma kontrolna przekracza ilosc bitów w bloku");
+                    return null;
+                }
+                System.err.println("Bledny bit: " + (i * totalNumberOfBits + controlSum - 1));
+                block[controlSum - 1] ^= 1;
+            }
+
+            int idResult = 0;
+            int idBlock = 0;
+            int idChecked = 0;
+            while (idBlock < totalNumberOfBits) {
+                if (idChecked < redundantBitsNumber && redundatBitsIds[idChecked] == idBlock) {
+                    idChecked++;
+                    idBlock++;
+                    continue;
+                }
+
+                result[i][idResult++] = block[idBlock++];
+            }
         }
 
-        return null;
+        return result;
     }
+
 }

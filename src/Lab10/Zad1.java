@@ -38,10 +38,23 @@ public class Zad1 {
 
         Hamming ham2 = new Hamming(7,4);
 
-        int[] decoded = ham2.decoder(flattened);
+        flattened[23] = flattened[23] == 1 ? 0 : 1;
+        //flattened[24] = flattened[24] == 1 ? 0 : 1;
+
+        int[][] decoded = ham2.decoder(flattened);
+
+        int totalLength2 = decoded.length * decoded[0].length;
+        int[] flattened2 = new int[totalLength2];
+        int index2 = 0;
+
+        for (int i = 0; i < decoded.length; i++) {
+            for (int j = 0; j < decoded[i].length; j++) {
+                flattened2[index2++] = decoded[i][j];
+            }
+        }
 
         System.out.println(Arrays.toString(rng));
-        System.out.println(Arrays.toString(decoded));
+        System.out.println(Arrays.toString(flattened2));
 
     }
 
