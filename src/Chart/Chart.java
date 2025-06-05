@@ -110,7 +110,7 @@ public class Chart {
         XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
         renderer.setSeriesLinesVisible(0, true);
         renderer.setSeriesShapesVisible(0, false);
-        renderer.setSeriesStroke(0, new BasicStroke(1.0f));
+        renderer.setSeriesStroke(0, new BasicStroke(3.0f));
 
 
         XYPlot plot = new XYPlot(dataset, xAxis, yAxis, renderer);
@@ -437,6 +437,4 @@ public class Chart {
             e.printStackTrace();
         }
     }
-
-
 }

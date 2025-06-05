@@ -57,6 +57,15 @@ public class FSK extends Modulator {
         int BIdold = 0;
 
         double[] P = new double[N];
+
+//        XYSeries Zseries = new XYSeries("z-FSK");
+//        XYSeries X1series = new XYSeries("x1-FSK");
+//        XYSeries X2series = new XYSeries("x2-FSK");
+//        XYSeries P1series = new XYSeries("p1-FSK");
+//        XYSeries P2series = new XYSeries("p2-FSK");
+//        XYSeries Pseries = new XYSeries("p-FSK");
+//        XYSeries Cseries = new XYSeries("c-FSK");
+
         for (int i = 0; i < N; i++) {
             double t = i * Ts;
             int BId = (int) Math.floor(i / (N / (double) Blength));
@@ -65,7 +74,7 @@ public class FSK extends Modulator {
                 p1i = 0.0;
                 p2i = 0.0;
                 pi = 0.0;
-            };
+            }
             BIdold = BId;
 
             double x1i = zi * Math.sin(2.0 * Math.PI * fn1 * t);
@@ -76,6 +85,13 @@ public class FSK extends Modulator {
             pi += x2i - x1i;
 
             P[i] = pi;
+
+//            Zseries.add(t, zi);
+//            X1series.add(t, x1i);
+//            X2series.add(t, x2i);
+//            P1series.add(t, p1i);
+//            P2series.add(t, p2i);
+//            Pseries.add(t, pi);
         }
 
         int[] cs = new int[Blength];
@@ -89,8 +105,18 @@ public class FSK extends Modulator {
 
             double signal = piy1 > h ? 1.0 : 0.0;
 
+//            Cseries.add(t, signal);
+//            Cseries.add(t1, signal);
+
             cs[i] = (int) signal;
         }
+
+//        Chart.saveChart(Zseries, "Czas [s]", "Amplituda", "src/Lab12/plots/z-FSK.png");
+//        Chart.saveChart(X1series, "Czas [s]", "Amplituda", "src/Lab12/plots/x1-FSK.png");
+//        Chart.saveChart(X2series, "Czas [s]", "Amplituda", "src/Lab12/plots/x2-FSK.png");
+//        Chart.saveChart(P1series, "Czas [s]", "Amplituda", "src/Lab12/plots/p1-FSK.png");
+//        Chart.saveChart(P2series, "Czas [s]", "Amplituda", "src/Lab12/plots/p2-FSK.png");
+//        Chart.saveChart(Pseries, "Czas [s]", "Amplituda", "src/Lab12/plots/p-FSK.png");
 
         return cs;
     }

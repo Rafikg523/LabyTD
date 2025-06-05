@@ -72,6 +72,7 @@ public class Hamming1 extends Coder {
     public int[] decode(int[] encoded) {
         int blockNumber = (int) Math.ceil((double) encoded.length / totalNumberOfBits);
         int[] result = new int[blockNumber * dataBitsNumber];
+        int correctedBits = 0;
 
         for (int i = 0; i < blockNumber; i++) {
             int[] block = new int[totalNumberOfBits];
@@ -95,6 +96,7 @@ public class Hamming1 extends Coder {
             if (controlSum > 0) {
                 if (controlSum <= totalNumberOfBits) {
                     //System.err.println("Błędny bit: " + (i * totalNumberOfBits + controlSum - 1));
+                    correctedBits++;
                     block[controlSum - 1] ^= 1;
 
                 } else {
@@ -116,6 +118,7 @@ public class Hamming1 extends Coder {
             }
         }
 
+        //System.out.println("Poprawiono " + correctedBits);
         return result;
     }
 

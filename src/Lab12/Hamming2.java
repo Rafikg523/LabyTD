@@ -125,6 +125,7 @@ public class Hamming2 extends Coder{
     public int[] decode(int[] encoded) {
         int blockNumber = encoded.length / totalNumberOfBits;
         int[] result = new int[blockNumber * dataBitsNumber];
+        int correctedBits = 0;
 
         for (int i = 0; i < blockNumber; i++) {
             int[] block = Arrays.copyOfRange(encoded, i * totalNumberOfBits, (i + 1) * totalNumberOfBits);
@@ -148,6 +149,7 @@ public class Hamming2 extends Coder{
 
             if (errPos != 0 && errPos <= totalNumberOfBits) {
                 block[errPos - 1] ^= 1;
+                correctedBits++;
 //                System.out.println("Corrected: " + Arrays.toString(block));
 //                System.out.println(" ".repeat((errPos - 1) * 3 + 12) + "^");
                 //System.err.println("Błąd: Block: " + i + " Bit: " + errPos + " (" + (i * totalNumberOfBits + errPos - 1) + ")");
@@ -170,7 +172,7 @@ public class Hamming2 extends Coder{
                 result[i * dataBitsNumber + j] = decoded[j];
             }
         }
-
+        //System.out.println("Poprawiono: " + correctedBits);
         return result;
     }
 

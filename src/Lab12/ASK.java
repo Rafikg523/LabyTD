@@ -9,6 +9,7 @@ public class ASK extends Modulator {
     public double A1;
     public double A2;
     public int fs;
+    public double T;
 
     public ASK(double Tb, double W, double A1, double A2, int fs){
         this.Tb = Tb;
@@ -19,7 +20,7 @@ public class ASK extends Modulator {
     }
 
     public double[] modulate(int[] B) {
-        double T = Tb * B.length;
+        this.T = Tb * B.length;
         double fn = W / Tb;
         int N = (int) Math.ceil(fs * T);
         double Ts = 1.0 / fs;
@@ -72,7 +73,6 @@ public class ASK extends Modulator {
             pi += xi;
             P[i] = pi;
         }
-
 
         int[] cs = new int[Blength];
 
