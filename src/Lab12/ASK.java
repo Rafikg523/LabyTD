@@ -53,7 +53,7 @@ public class ASK extends Modulator {
         double Ts = 1.0 / fs;
 
         double fi = 0.0;
-        double h = (A1 + A2)/2 * N / T;
+        double h = (A1 + A2) / 4.0 * ((double)N / Blength); // Corrected threshold
         double A = 1.0;
 
         double pi = 0.0;

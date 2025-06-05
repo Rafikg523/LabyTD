@@ -8,7 +8,7 @@ import java.util.Random;
 
 public class Zad1  {
     public static void main(String[] args) {
-        int N  = 70;
+        int N  = 44;
         Random random = new Random();
         int[] rng = new int[N];
         for (int i = 0; i < N; i++) {
@@ -17,14 +17,15 @@ public class Zad1  {
 
         int[] data = new int[]{1,1,0,1,1,0,0,1,1,0,0};
 
-        int[] raw = data;
+        int[] raw = rng;
 
         int fs = 500;
-        double Tb = 2.0;
+        double Tb = 1.0;
+        double W = 10.0;
         Modulator[] modulators = new Modulator[3];
-        modulators[0] = new ASK(Tb, 10.0, 1.0, 0.5, fs);
-        modulators[1] = new PSK(Tb, 10.0, fs);
-        modulators[2] = new FSK(Tb, 20.0, fs);
+        modulators[0] = new ASK(Tb, W, 1.0, 0.5, fs);
+        modulators[1] = new PSK(Tb, W, fs);
+        modulators[2] = new FSK(Tb, W, fs);
 
         Coder[] coders = new Coder[2];
         coders[0] = new Hamming1(7, 4);
