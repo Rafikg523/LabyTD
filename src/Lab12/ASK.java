@@ -84,7 +84,12 @@ public class ASK extends Modulator {
             double t = T / N * id;
             double t1 = T / N * id1;
 
-            double signal = piy1 > h ? 1.0 : 0.0;
+            double signal;
+            if (A1 < A2) {
+                signal = piy1 > h ? 1.0 : 0.0;
+            } else {
+                signal = piy1 < h ? 1.0 : 0.0;
+            }
 
             cs[i] = (int) signal;
         }
