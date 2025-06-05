@@ -21,10 +21,6 @@ public class Zad1 {
         System.out.println("Encoding:");
         int[] encoded = ham.encoder(raw);
 
-        encoded[2] ^= 1;
-        encoded[15] ^= 1;
-        encoded [30] ^= 1;
-
         System.out.println("Decoding:");
         int[] decoded = ham.decoder(encoded);
 

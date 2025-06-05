@@ -1,9 +1,9 @@
-package Lab11;
+package Lab12;
 
 import java.util.Arrays;
 import java.util.Random;
 
-public class Hamming {
+public class Hamming2 extends Coder{
     int dataBitsNumber;
     int redundantBitsNumber;
     int totalNumberOfBits;
@@ -11,7 +11,7 @@ public class Hamming {
     private int[][] G;
     private int[][] H;
 
-    public Hamming(int total, int data) {
+    public Hamming2(int total, int data) {
         this.dataBitsNumber = data;
         this.redundantBitsNumber = total - data;
         this.totalNumberOfBits = total;
@@ -81,7 +81,7 @@ public class Hamming {
         return H;
     }
 
-    public int[] encoder(int[] raw) {
+    public int[] encode(int[] raw) {
         int blockNumber = (int) Math.ceil((double) raw.length / dataBitsNumber);
         int[] result = new int[blockNumber * totalNumberOfBits];
 
@@ -105,14 +105,14 @@ public class Hamming {
                 encodedBlock[j] = sum % 2;
             }
 
-            System.out.println("Block: " + i);
-            System.out.println("Raw:     " + Arrays.toString(block));
-            System.out.println("Encoded: " + Arrays.toString(encodedBlock));
-            System.out.println();
+//            System.out.println("Block: " + i);
+//            System.out.println("Raw:     " + Arrays.toString(block));
+//            System.out.println("Encoded: " + Arrays.toString(encodedBlock));
+//            System.out.println();
 
-            Random random = new Random();
-            int id = random.nextInt(totalNumberOfBits);
-            encodedBlock[id] ^= 1;
+//            Random random = new Random();
+//            int id = random.nextInt(totalNumberOfBits);
+//            encodedBlock[id] ^= 1;
 
             for (int k = 0; k < totalNumberOfBits; k++) {
                 result[i * totalNumberOfBits + k] = encodedBlock[k];
@@ -122,7 +122,7 @@ public class Hamming {
     }
 
 
-    public int[] decoder(int[] encoded) {
+    public int[] decode(int[] encoded) {
         int blockNumber = encoded.length / totalNumberOfBits;
         int[] result = new int[blockNumber * dataBitsNumber];
 
@@ -130,8 +130,8 @@ public class Hamming {
             int[] block = Arrays.copyOfRange(encoded, i * totalNumberOfBits, (i + 1) * totalNumberOfBits);
             int[] s = new int[redundantBitsNumber];
 
-            System.out.println("Block: " + i);
-            System.out.println("Encoded:   " + Arrays.toString(block));
+//            System.out.println("Block: " + i);
+//            System.out.println("Encoded:   " + Arrays.toString(block));
 
             for (int row = 0; row < redundantBitsNumber; row++) {
                 int sum = 0;
@@ -148,8 +148,8 @@ public class Hamming {
 
             if (errPos != 0 && errPos <= totalNumberOfBits) {
                 block[errPos - 1] ^= 1;
-                System.out.println("Corrected: " + Arrays.toString(block));
-                System.out.println(" ".repeat((errPos - 1) * 3 + 12) + "^");
+//                System.out.println("Corrected: " + Arrays.toString(block));
+//                System.out.println(" ".repeat((errPos - 1) * 3 + 12) + "^");
                 //System.err.println("Błąd: Block: " + i + " Bit: " + errPos + " (" + (i * totalNumberOfBits + errPos - 1) + ")");
             }
 
@@ -163,8 +163,8 @@ public class Hamming {
                 }
             }
 
-            System.out.println("Decoded:   " + Arrays.toString(decoded));
-            System.out.println();
+//            System.out.println("Decoded:   " + Arrays.toString(decoded));
+//            System.out.println();
 
             for (int j = 0; j < dataBitsNumber; j++) {
                 result[i * dataBitsNumber + j] = decoded[j];
