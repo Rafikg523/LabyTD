@@ -85,7 +85,7 @@ public class Chart {
         try {
             File file = new File(filename);
             ChartUtilities.saveChartAsPNG(file, chart, 1600, 600);
-            System.out.println("Zapisano wykres: " + filename);
+            //System.out.println("Zapisano wykres: " + filename);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -105,12 +105,12 @@ public class Chart {
 
         NumberAxis yAxis = new NumberAxis(Yname);
         yAxis.setAutoRangeIncludesZero(false);
-        yAxis.setRange(-0.2, 1.2);
+        yAxis.setRange(-0.2, 100.0);
 
         XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
         renderer.setSeriesLinesVisible(0, true);
         renderer.setSeriesShapesVisible(0, false);
-        renderer.setSeriesStroke(0, new BasicStroke(4.0f));
+        renderer.setSeriesStroke(0, new BasicStroke(1.0f));
 
 
         XYPlot plot = new XYPlot(dataset, xAxis, yAxis, renderer);
@@ -122,8 +122,8 @@ public class Chart {
 
         try {
             File file = new File(filename);
-            ChartUtilities.saveChartAsPNG(file, chart, 1600, 600);
-            System.out.println("Zapisano wykres: " + filename);
+            ChartUtilities.saveChartAsPNG(file, chart, 800, 600);
+            //System.out.println("Zapisano wykres: " + filename);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -175,7 +175,7 @@ public class Chart {
 
         try {
             File file = new File(filename);
-            ChartUtilities.saveChartAsPNG(file, chart, 1600, 600);
+            ChartUtilities.saveChartAsPNG(file, chart, 800, 600);
             System.out.println("Zapisano wykres: " + filename);
         } catch (IOException e) {
             e.printStackTrace();

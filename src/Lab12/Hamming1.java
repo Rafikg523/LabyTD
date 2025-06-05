@@ -94,7 +94,7 @@ public class Hamming1 extends Coder {
 
             if (controlSum > 0) {
                 if (controlSum <= totalNumberOfBits) {
-                    System.err.println("Błędny bit: " + (i * totalNumberOfBits + controlSum - 1));
+                    //System.err.println("Błędny bit: " + (i * totalNumberOfBits + controlSum - 1));
                     block[controlSum - 1] ^= 1;
 
                 } else {
@@ -119,5 +119,7 @@ public class Hamming1 extends Coder {
         return result;
     }
 
-
+    public String getName() {
+        return "Hamming(" + totalNumberOfBits + ", " + dataBitsNumber + ")";
+    }
 }

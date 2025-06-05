@@ -174,4 +174,7 @@ public class Hamming2 extends Coder{
         return result;
     }
 
+    public String getName() {
+        return "Hamming(" + totalNumberOfBits + ", " + dataBitsNumber + ")";
+    }
 }

@@ -24,9 +24,6 @@ public class ASK extends Modulator {
         int N = (int) Math.ceil(fs * T);
         double Ts = 1.0 / fs;
 
-        XYSeries Zseries = new XYSeries("z-ASK");
-
-
         double[] Z = new double[N];
 
         for (int i = 0; i < N; i++) {
@@ -40,10 +37,8 @@ public class ASK extends Modulator {
                 zi = A2 * Math.sin(2 * Math.PI * fn * t);
             }
 
-            Zseries.add(t, zi);
             Z[i] = zi;
         }
-        Chart.saveChart(Zseries, "Czas [s]", "Amplituda", "src/Lab12/plots/zASK.png");
 
         return Z;
     }
@@ -60,10 +55,6 @@ public class ASK extends Modulator {
         double h = (A1 + A2)/2 * N / T;
         double A = 1.0;
 
-        XYSeries Xseries = new XYSeries("xASK");
-        XYSeries Pseries = new XYSeries("pASK");
-        XYSeries Cseries = new XYSeries("cASK");
-
         double pi = 0.0;
         int BIdold = 0;
         double[] P = new double[N];
@@ -77,15 +68,11 @@ public class ASK extends Modulator {
 
 
             double xi = zi * A * Math.sin(2.0 * Math.PI * fn * t + fi);
-            Xseries.add(t, xi);
 
             pi += xi;
-            Pseries.add(t, pi);
             P[i] = pi;
         }
 
-        Chart.saveChart(Xseries, "Czas [s]", "Amplituda", "src/Lab12/plots/x-ASK.png");
-        Chart.saveChart(Pseries, "Czas [s]", "Amplituda", "src/Lab12/plots/p-ASK.png");
 
         int[] cs = new int[Blength];
 
@@ -99,13 +86,13 @@ public class ASK extends Modulator {
 
             double signal = piy1 > h ? 1.0 : 0.0;
 
-            Cseries.add(t, signal);
-            Cseries.add(t1, signal);
-
             cs[i] = (int) signal;
         }
-        Chart.saveChart3(Cseries, "Czas [s]", "Amplituda", "src/Lab12/plots/c-ASK.png");
 
         return cs;
+    }
+
+    public String getName() {
+        return "ASK";
     }
 }
