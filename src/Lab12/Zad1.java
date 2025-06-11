@@ -1,6 +1,5 @@
 package Lab12;
 
-import Chart.Chart;
 import org.jfree.data.xy.XYSeries;
 
 import java.util.Arrays;
@@ -35,15 +34,18 @@ public class Zad1  {
 
         String[] noiseTypes = {"White", "Weird"};
         double[][] alpha = new double[2][10];
-        alpha[0] = new double[]{0.0, 0.333, 0.666, 1.0, 1.333, 1.666, 2.0, 2.333, 2.666, 3.0};
-        alpha[1] = new double[]{0.0, 0.222, 0.444, 0.666, 0.888, 1.111, 1.333, 1.555, 1.777, 2.0};
-
+        int alphaSize = 10;
+        for (int i = 0; i < alphaSize; i++) {
+            alpha[0][i] = i * 3;
+            alpha[1][i] = i * 3;
+        }
 
         for (Modulator modulator : modulators) {
             for (Coder coder : coders) {
                 for (int n = 0; n < noiseTypes.length; n++) {
                     String noiseType = noiseTypes[n];
                     String title = "Modulator: " + modulator.getName() + ", Coder: " + coder.getName() + ", Noise: " + noiseType;
+                    String plotTitle = modulator.getName() + "_" + coder.getName() + "_" + noiseType;
                     System.out.println(title);
 
                     XYSeries series = new XYSeries(title);
@@ -53,7 +55,7 @@ public class Zad1  {
                         double[] modulatedSignal = modulator.modulate(encodedSignal);
                         double[] noisySignal;
                         if (n == 1) {
-                            noisySignal = noise.addWeirdNoise(modulatedSignal, alpha[n][a], fs);
+                            noisySignal = noise.addWeirdNoise(modulatedSignal, alpha[n][a], fs, plotTitle);
                         } else {
                             noisySignal = noise.addWhiteNoise(modulatedSignal, alpha[n][a]);
                         }
@@ -71,7 +73,7 @@ public class Zad1  {
                         series.add(alpha[n][a], BER);
                     }
 
-                    Chart.saveChart3(series, "alpha", "BER %", "src/Lab12/plots/" + modulator.getName() + "_" + coder.getName() + "_" + noiseType + ".png");
+                    Chart.saveChart3(series, "alpha", "BER %", "src/Lab12/plots/" + plotTitle + ".png");
                 }
             }
         }
