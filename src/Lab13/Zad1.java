@@ -1,8 +1,5 @@
 package Lab13;
 
-import org.fxyz3d.geometry.Point3D;
-import org.jzy3d.analysis.AnalysisLauncher;
-import org.jzy3d.analysis.AbstractAnalysis;
 import org.jzy3d.chart.Chart;
 import org.jzy3d.chart.factories.AWTChartComponentFactory;
 import org.jzy3d.colors.Color;
@@ -14,8 +11,6 @@ import org.jzy3d.plot3d.builder.concrete.OrthonormalGrid;
 import org.jzy3d.plot3d.primitives.Shape;
 import org.jzy3d.plot3d.rendering.canvas.Quality;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 public class Zad1  {
@@ -94,20 +89,23 @@ public class Zad1  {
                             berMatrix[a][b] = BER;
                         }
                     }
-                    create3DPlot(berMatrix, plotTitle);
+                    create3DPlot(berMatrix, plotTitle, alpha, betha);
                 }
             }
         }
     }
 
-    public static void create3DPlot(double[][] berMatrix, String plotTitle) {
+    public static void create3DPlot(double[][] berMatrix, String plotTitle, double[] alpha, double[] betha) {
         int sizeA = berMatrix.length;
         int sizeB = berMatrix[0].length;
+        // Zakładamy, że alpha i betha są posortowane rosnąco i równomiernie
+        double alphaStep = (alpha[sizeA-1] - alpha[0]) / (sizeA - 1);
+        double bethaStep = (betha[sizeB-1] - betha[0]) / (sizeB - 1);
         Mapper mapper = new Mapper() {
             @Override
             public double f(double a, double b) {
-                int ia = (int) Math.round(a);
-                int ib = (int) Math.round(b);
+                int ia = (int) Math.round((a - alpha[0]) / alphaStep);
+                int ib = (int) Math.round((b - betha[0]) / bethaStep);
                 if (ia >= 0 && ia < sizeA && ib >= 0 && ib < sizeB) {
                     return berMatrix[ia][ib];
                 } else {
@@ -115,8 +113,8 @@ public class Zad1  {
                 }
             }
         };
-        Range rangeA = new Range(0, sizeA - 1);
-        Range rangeB = new Range(0, sizeB - 1);
+        Range rangeA = new Range((float)alpha[0], (float)alpha[sizeA-1]);
+        Range rangeB = new Range((float)betha[0], (float)betha[sizeB-1]);
         int steps = sizeA;
         Shape surface = Builder.buildOrthonormal(new OrthonormalGrid(rangeA, steps, rangeB, steps), mapper);
         surface.setColorMapper(new org.jzy3d.colors.ColorMapper(
@@ -130,10 +128,9 @@ public class Zad1  {
         surface.setWireframeColor(Color.BLACK);
         Chart chart = AWTChartComponentFactory.chart(Quality.Advanced, "offscreen");
         chart.getScene().getGraph().add(surface);
-        chart.getAxeLayout().setXAxeLabel("a");
-        chart.getAxeLayout().setYAxeLabel("b");
+        chart.getAxeLayout().setXAxeLabel("alpha");
+        chart.getAxeLayout().setYAxeLabel("betha");
         chart.getAxeLayout().setZAxeLabel("BER (%)");
-
         chart.getView().setViewPoint(new Coord3d(Math.PI / 4 * -3, Math.PI/4, 0));
         try {
             String filePath = "src/Lab13/plots/" + plotTitle + ".png";
